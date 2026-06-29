@@ -1,0 +1,8 @@
+{
+  "@@locale": "ar",
+  "mapSettings": "إعدادات الخريطة",
+  "mapType": "نوع الخريطة",
+  "mapChooseStyle": "اختر نمط الخريطة المفضّل",
+  "mapOnline": "متصل",
+  "mapOffline": "دون اتصال"
+}

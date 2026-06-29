@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../l10n/maps_localizations.dart';
+
 /// Shared widget for toggling between online and offline maps.
 ///
 /// This widget provides a consistent UI across different screens
@@ -32,12 +34,12 @@ class MapOnlineOfflineToggle extends StatelessWidget {
       segments: [
         ButtonSegment<bool>(
           value: true,
-          label: const Text('Online'),
+          label: Text(MapsLocalizations.of(context)?.mapOnline ?? 'Online'),
           icon: Icon(Icons.cloud_outlined, size: compact ? 18 : 20),
         ),
         ButtonSegment<bool>(
           value: false,
-          label: const Text('Offline'),
+          label: Text(MapsLocalizations.of(context)?.mapOffline ?? 'Offline'),
           icon: Icon(Icons.offline_bolt_outlined, size: compact ? 18 : 20),
         ),
       ],

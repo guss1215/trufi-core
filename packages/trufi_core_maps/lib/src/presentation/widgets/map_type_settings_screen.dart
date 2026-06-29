@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../l10n/maps_localizations.dart';
 import 'map_type_option.dart';
 import 'map_selection_widgets.dart';
 
@@ -125,7 +126,9 @@ class _MapTypeSettingsScreenState extends State<MapTypeSettingsScreen>
             _buildAnimatedItem(
               index: 0,
               child: _MapSettingsHeader(
-                title: widget.appBarTitle ?? (Localizations.localeOf(context).languageCode == 'es' ? 'Configuración del mapa' : 'Map Settings'),
+                title: widget.appBarTitle ??
+                    MapsLocalizations.of(context)?.mapSettings ??
+                    'Map Settings',
                 onClose: () => Navigator.of(context).pop(),
               ),
             ),
@@ -139,7 +142,9 @@ class _MapTypeSettingsScreenState extends State<MapTypeSettingsScreen>
                   _buildAnimatedItem(
                     index: 1,
                     child: _MapTypeHeroSection(
-                      title: widget.sectionTitle ?? (Localizations.localeOf(context).languageCode == 'es' ? 'Tipo de mapa' : 'Map Type'),
+                      title: widget.sectionTitle ??
+                          MapsLocalizations.of(context)?.mapType ??
+                          'Map Type',
                     ),
                   ),
 
@@ -284,9 +289,8 @@ class _MapTypeHeroSection extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            Localizations.localeOf(context).languageCode == 'es'
-                ? 'Elige tu estilo de mapa preferido'
-                : 'Choose your preferred map style',
+            MapsLocalizations.of(context)?.mapChooseStyle ??
+                'Choose your preferred map style',
             style: theme.textTheme.bodySmall?.copyWith(
               color: colorScheme.onSurfaceVariant,
             ),

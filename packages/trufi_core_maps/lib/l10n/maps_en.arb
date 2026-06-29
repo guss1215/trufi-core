@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "mapSettings": "Map Settings",
+  "@mapSettings": { "description": "Title of the map settings screen" },
+  "mapType": "Map Type",
+  "@mapType": { "description": "Section header for the map type/style chooser" },
+  "mapChooseStyle": "Choose your preferred map style",
+  "@mapChooseStyle": { "description": "Subtitle under the map type section header" },
+  "mapOnline": "Online",
+  "@mapOnline": { "description": "Label for the online maps segment" },
+  "mapOffline": "Offline",
+  "@mapOffline": { "description": "Label for the offline maps segment" }
+}

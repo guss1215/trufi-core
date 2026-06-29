@@ -1,0 +1,8 @@
+{
+  "@@locale": "es",
+  "mapSettings": "Configuración del mapa",
+  "mapType": "Tipo de mapa",
+  "mapChooseStyle": "Elige tu estilo de mapa preferido",
+  "mapOnline": "En línea",
+  "mapOffline": "Sin conexión"
+}

@@ -17,6 +17,7 @@ library;
 // ============================================
 // CONFIGURATION
 // ============================================
+export 'l10n/maps_localizations.dart';
 export 'src/configuration/map_configuration.dart';
 export 'src/configuration/marker_configuration.dart';
 export 'src/configuration/map_copyright.dart';
