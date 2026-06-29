@@ -1,0 +1,8 @@
+{
+  "@@locale": "ar",
+  "menuFares": "الأجور",
+  "faresTitle": "معلومات الأجور",
+  "faresSubtitle": "الأسعار الحالية للنقل العام",
+  "faresLastUpdated": "آخر تحديث: {date}",
+  "faresMoreInfo": "مزيد من المعلومات"
+}

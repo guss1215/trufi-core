@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'home_screen_localizations_ar.dart';
 import 'home_screen_localizations_de.dart';
 import 'home_screen_localizations_en.dart';
 import 'home_screen_localizations_es.dart';
@@ -98,6 +99,7 @@ abstract class HomeScreenLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('de'),
     Locale('en'),
     Locale('es'),
@@ -849,7 +851,7 @@ class _HomeScreenLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['ar', 'de', 'en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_HomeScreenLocalizationsDelegate old) => false;
@@ -858,6 +860,8 @@ class _HomeScreenLocalizationsDelegate
 HomeScreenLocalizations lookupHomeScreenLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return HomeScreenLocalizationsAr();
     case 'de':
       return HomeScreenLocalizationsDe();
     case 'en':

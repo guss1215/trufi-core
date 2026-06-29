@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
+import 'core_localizations_ar.dart';
 import 'core_localizations_de.dart';
 import 'core_localizations_en.dart';
 import 'core_localizations_es.dart';
@@ -95,6 +96,7 @@ abstract class CoreLocalizations {
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
+    Locale('ar'),
     Locale('de'),
     Locale('en'),
     Locale('es'),
@@ -228,7 +230,7 @@ class _CoreLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['de', 'en', 'es'].contains(locale.languageCode);
+      <String>['ar', 'de', 'en', 'es'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_CoreLocalizationsDelegate old) => false;
@@ -237,6 +239,8 @@ class _CoreLocalizationsDelegate
 CoreLocalizations lookupCoreLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
+    case 'ar':
+      return CoreLocalizationsAr();
     case 'de':
       return CoreLocalizationsDe();
     case 'en':

@@ -1,0 +1,12 @@
+{
+  "@@locale": "ar",
+  "menuFeedback": "الملاحظات",
+  "feedbackTitle": "يسعدنا أن نسمع منك!",
+  "feedbackContent": "تساعدنا ملاحظاتك على تحسين التطبيق وتوفير معلومات أفضل عن النقل العام للجميع في المدينة.",
+  "feedbackWhatWeWant": "ما الذي يسعدنا معرفته",
+  "feedbackBugs": "الأعطال أو المشكلات التي واجهتها",
+  "feedbackRoutes": "تغييرات المسارات أو المحطات المفقودة",
+  "feedbackSuggestions": "أفكار لتحسين التطبيق",
+  "feedbackSend": "إرسال الملاحظات",
+  "feedbackSubtitle": "صوتك يهمنا"
+}

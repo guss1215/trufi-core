@@ -1,0 +1,22 @@
+{
+  "@@locale": "ar",
+  "appName": "تطبيق Trufi",
+  "appLoading": "جارٍ التحميل...",
+  "navHome": "الرئيسية",
+  "navSearch": "البحث",
+  "navFeedback": "ملاحظات",
+  "navSettings": "الإعدادات",
+  "navAbout": "حول التطبيق",
+  "actionSave": "حفظ",
+  "actionCancel": "إلغاء",
+  "actionConfirm": "تأكيد",
+  "errorGeneric": "حدث خطأ",
+  "errorNetwork": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+  "errorInitialization": "فشل في تهيئة التطبيق",
+  "actionRetry": "إعادة المحاولة",
+  "errorPageNotFound": "الصفحة غير موجودة",
+  "actionGoHome": "الذهاب إلى الرئيسية",
+  "titleError": "خطأ",
+  "unreadCount": "{count} غير مقروءة",
+  "markAllAsRead": "تحديد الكل كمقروء"
+}

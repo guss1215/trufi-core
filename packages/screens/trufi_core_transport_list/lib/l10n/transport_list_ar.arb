@@ -1,0 +1,19 @@
+{
+  "@@locale": "ar",
+  "menuTransportList": "المسارات",
+  "searchRoutes": "البحث عن المسارات",
+  "noRoutesFound": "لم يتم العثور على مسارات",
+  "shareRoute": "مشاركة المسار",
+  "stops": "{count} محطة",
+  "routeNotFound": "المسار غير موجود",
+  "routeLoadError": "تعذّر تحميل المسار",
+  "pullDownToRefresh": "اسحب للأسفل للتحديث",
+  "tryDifferentSearch": "جرّب كلمة بحث مختلفة",
+  "buttonGoBack": "رجوع",
+  "routeCount": "{count, plural, =1{مسار واحد} other{{count} مسارات}}",
+  "labelDistance": "المسافة",
+  "labelStops": "المحطات",
+  "labelMode": "وسيلة النقل",
+  "noStopsAvailable": "لا توجد محطات متاحة",
+  "loadingRoute": "جارٍ تحميل المسار..."
+}
