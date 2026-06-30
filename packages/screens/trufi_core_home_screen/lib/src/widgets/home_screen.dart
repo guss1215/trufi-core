@@ -1717,8 +1717,12 @@ class _HomeScreenState extends State<HomeScreen>
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Map type button (with optional POI layers if available)
-              if (mapEngineManager.engines.length > 1) ...[
+              // Map type button (with optional POI layers if available).
+              // Shown when there's more than one map style to choose between,
+              // or when there are map layers (e.g. POIs) to toggle — so a
+              // single-style app still exposes its layer settings.
+              if (mapEngineManager.engines.length > 1 ||
+                  _buildMapLayerExtras() != null) ...[
                 MapTypeButton.fromEngines(
                   engines: mapEngineManager.engines,
                   currentEngineIndex: mapEngineManager.currentIndex,
