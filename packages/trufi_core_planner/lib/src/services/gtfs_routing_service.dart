@@ -185,52 +185,93 @@ class GtfsRoutingService {
     // which is why nearby trips returned no itineraries. The walk-distance cap
     // still bounds the geographic extent; this just stops over-pruning by count.
     int maxStopCandidates = 60,
+    // Best-effort fallback. When no bus drops the rider within
+    // [maxWalkDistance] of the destination, allow a bus to drop them up to this
+    // far out and walk the rest — surfacing the option(s) that leave them
+    // closest to the destination instead of returning nothing. Set this
+    // <= maxWalkDistance to disable the fallback.
+    double bestEffortDestWalk = 3000,
   }) {
     final originStops = spatialIndex.findNearestStops(
       origin,
       maxResults: maxStopCandidates,
       maxDistance: maxWalkDistance,
     );
+    if (originStops.isEmpty) return [];
 
+    // Normal pass: the bus must drop the rider within [maxWalkDistance] of the
+    // destination.
     final destinationStops = spatialIndex.findNearestStops(
       destination,
       maxResults: maxStopCandidates,
       maxDistance: maxWalkDistance,
     );
-
-    if (originStops.isEmpty || destinationStops.isEmpty) {
-      return [];
+    if (destinationStops.isNotEmpty) {
+      final paths = <RoutingPath>[];
+      _findDirectRoutes(originStops, destinationStops, paths);
+      if (maxTransfers >= 1) {
+        _findOneTransferRoutes(originStops, destinationStops, paths);
+      }
+      final result = _rankBucketed(
+        paths,
+        maxDirects: maxDirects,
+        maxTransferPaths: maxTransferPaths,
+        maxResults: maxResults,
+      );
+      if (result.isNotEmpty) return result;
     }
 
-    final paths = <RoutingPath>[];
-
-    // Phase 1: Find direct routes (no transfers)
-    _findDirectRoutes(originStops, destinationStops, paths);
-
-    // Phase 2: Find routes with 1 transfer
-    if (maxTransfers >= 1) {
-      _findOneTransferRoutes(originStops, destinationStops, paths);
+    // Best-effort pass: nothing reaches within walking distance of the
+    // destination (a poorly-connected area, or a trip that would need more
+    // transfers than supported). Let a bus drop the rider farther out and walk
+    // the rest, ranked by how close it leaves them.
+    if (bestEffortDestWalk > maxWalkDistance) {
+      // Consider EVERY stop within the best-effort radius, not just the N
+      // closest to the destination: the stop a reachable bus actually drops at
+      // may be near the edge of the radius, with many (unreachable) stops
+      // closer to the destination ahead of it. _rankByDropoff then picks the
+      // reachable stop that leaves the rider closest.
+      final farDest = spatialIndex.findNearestStops(
+        destination,
+        maxResults: 1 << 30,
+        maxDistance: bestEffortDestWalk,
+      );
+      if (farDest.isNotEmpty) {
+        final paths = <RoutingPath>[];
+        _findDirectRoutes(originStops, farDest, paths);
+        if (maxTransfers >= 1) {
+          _findOneTransferRoutes(originStops, farDest, paths);
+        }
+        // Only worth suggesting if the bus actually leaves the rider closer to
+        // the destination than simply walking from the origin would.
+        final straightLine = _haversine(origin, destination);
+        paths.removeWhere((p) => p.destinationWalkDistance >= straightLine);
+        return _rankByDropoff(paths, maxResults: maxResults);
+      }
     }
 
-    // Sort all paths by score (lower is better)
+    return [];
+  }
+
+  /// Dedupe by route combination and split into direct/transfer buckets. In
+  /// Cochabamba each ride is a separate fare, so a transfer doubles the cost —
+  /// only worth offering when there's no direct option, so transfers are
+  /// suppressed entirely when at least one direct exists.
+  List<RoutingPath> _rankBucketed(
+    List<RoutingPath> paths, {
+    required int maxDirects,
+    required int maxTransferPaths,
+    required int maxResults,
+  }) {
     paths.sort((a, b) => a.score.compareTo(b.score));
 
-    // Deduplicate: keep only the best path per route combination.
-    // E.g., all "Bus 15 → Z14" variants collapse into the best one,
-    // leaving room for genuinely different route options.
     final seen = <String>{};
     final uniquePaths = <RoutingPath>[];
     for (final path in paths) {
       final key = path.segments.map((s) => s.route.shortName).join('|');
-      if (seen.add(key)) {
-        uniquePaths.add(path);
-      }
+      if (seen.add(key)) uniquePaths.add(path);
     }
 
-    // Split into direct vs transfer buckets. In Cochabamba each ride is a
-    // separate fare, so a transfer doubles the cost — only worth offering
-    // when there's no direct option. Suppress transfers entirely if at
-    // least one direct exists.
     final directs = <RoutingPath>[];
     final transfers = <RoutingPath>[];
     for (final p in uniquePaths) {
@@ -245,6 +286,30 @@ class GtfsRoutingService {
     }
     final ordered = directs.isNotEmpty ? directs : transfers;
     return ordered.take(maxResults).map(_resolvePathStops).toList();
+  }
+
+  /// Best-effort ranking: surface the itineraries that leave the rider closest
+  /// to the destination (shortest final walk), tie-broken by total distance.
+  /// Used only by the fallback, where a direct that drops far away is worse
+  /// than a transfer that drops close — so the direct-first bucketing of
+  /// [_rankBucketed] does not apply.
+  List<RoutingPath> _rankByDropoff(
+    List<RoutingPath> paths, {
+    required int maxResults,
+  }) {
+    paths.sort((a, b) {
+      final byWalk =
+          a.destinationWalkDistance.compareTo(b.destinationWalkDistance);
+      return byWalk != 0 ? byWalk : a.score.compareTo(b.score);
+    });
+
+    final seen = <String>{};
+    final unique = <RoutingPath>[];
+    for (final path in paths) {
+      final key = path.segments.map((s) => s.route.shortName).join('|');
+      if (seen.add(key)) unique.add(path);
+    }
+    return unique.take(maxResults).map(_resolvePathStops).toList();
   }
 
   /// Find direct routes (0 transfers) between origin and destination stops.
