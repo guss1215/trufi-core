@@ -188,9 +188,12 @@ class GtfsRoutingService {
     // Best-effort fallback. When no bus drops the rider within
     // [maxWalkDistance] of the destination, allow a bus to drop them up to this
     // far out and walk the rest — surfacing the option(s) that leave them
-    // closest to the destination instead of returning nothing. Set this
+    // closest to the destination instead of returning nothing. The result is
+    // still filtered to cases where the bus leaves the rider closer than just
+    // walking from the origin, so this can be generous: poorly-served areas of
+    // Sana'a often have their nearest reachable drop-off 3–4 km out. Set this
     // <= maxWalkDistance to disable the fallback.
-    double bestEffortDestWalk = 3000,
+    double bestEffortDestWalk = 5000,
   }) {
     final originStops = spatialIndex.findNearestStops(
       origin,
