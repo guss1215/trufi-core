@@ -178,16 +178,23 @@ class GtfsRoutingService {
     int maxTransfers = 1,
     int maxDirects = 5,
     int maxTransferPaths = 5,
+    // How many candidate boarding/alighting stops to consider within
+    // [maxWalkDistance]. Dense feeds (e.g. Sana'a, with stops mapped from OSM)
+    // can have 30+ stops within a 500 m walk; capping at ~10 throws away most
+    // boarding options and, with them, the routes that only those stops reach —
+    // which is why nearby trips returned no itineraries. The walk-distance cap
+    // still bounds the geographic extent; this just stops over-pruning by count.
+    int maxStopCandidates = 60,
   }) {
     final originStops = spatialIndex.findNearestStops(
       origin,
-      maxResults: 10,
+      maxResults: maxStopCandidates,
       maxDistance: maxWalkDistance,
     );
 
     final destinationStops = spatialIndex.findNearestStops(
       destination,
-      maxResults: 10,
+      maxResults: maxStopCandidates,
       maxDistance: maxWalkDistance,
     );
 
